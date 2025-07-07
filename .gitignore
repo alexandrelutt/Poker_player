@@ -1,4 +1,10 @@
-.DS_Store
-.history
-.cache
 data/input/*
+data/models/*
+data/output/*
+lib
+bin
+share
+include
+*.pyc
+*.DS_Store
+*.cfg

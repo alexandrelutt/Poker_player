@@ -1,0 +1,19 @@
+model_name: "SmolLM2-135M-Instruct" ## "Qwen2-0.5B-Instruct", "SmolLM2-135M-Instruct"
+
+train_file: "preflop_60k_train_set_prompt_and_label.json"
+reward_fcts: ["risk_averse"] # "risk_averse", "risk_seeking"
+
+learning_rate: 0.0001
+patience: 5
+per_device_train_batch_size: 16
+gradient_accumulation_steps: 4
+num_generations: 8
+eval_steps: 100
+save_steps: 100
+save_total_limit: 5
+logging_steps: 25
+
+lora_r: 16
+lora_alpha: 64
+lora_modules: ["q_proj", "k_proj", "v_proj", "o_proj", "up_proj", "down_proj", "gate_proj"]
+lora_dropout: 0.05
