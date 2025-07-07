@@ -1,0 +1,1 @@
+nohup python -m source.eval > evaluation.log 2>&1 &

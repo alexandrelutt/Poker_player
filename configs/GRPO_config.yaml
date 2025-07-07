@@ -1,7 +1,10 @@
-model_name: "SmolLM2-135M-Instruct" ## "Qwen2-0.5B-Instruct", "SmolLM2-135M-Instruct"
+## Parameters for GRPO
 
-train_file: "preflop_60k_train_set_prompt_and_label.json"
-reward_fcts: ["risk_averse"] # "risk_averse", "risk_seeking"
+model_name: "Qwen2-0.5B-Instruct" ## "Qwen2-0.5B-Instruct", "SmolLM2-135M-Instruct"
+sft_checkpoint: 20_000
+
+train_file: "preflop_500k_train_set_prompt_and_label.json"
+reward_fct: ["risk_averse"] # "risk_averse", "risk_seeking"
 
 learning_rate: 0.0001
 patience: 5
