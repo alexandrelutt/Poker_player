@@ -1,9 +1,8 @@
 ## Parameters for GRPO
 
 model_name: "Qwen2-0.5B-Instruct" ## "Qwen2-0.5B-Instruct", "SmolLM2-135M-Instruct"
-sft_checkpoint: 4_200
 
-reward_fct: ["risk_averse"] # "risk_averse", "risk_seeking"
+reward_fcts: ["risk_averse"] # "risk_averse", "risk_seeking"
 
 learning_rate: 0.0001
 patience: 5

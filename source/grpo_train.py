@@ -2,7 +2,7 @@ import os
 import logging
 import yaml
 
-from transformers import AutoModelForCausalLM, AutoTokenizer, EarlyStoppingCallback
+from transformers import AutoModelForCausalLM, AutoTokenizer, EarlyStoppingCallback, get_last_checkpoint
 from trl import GRPOConfig, GRPOTrainer
 from peft import PeftModel, LoraConfig
 from source.data import load_dataset
@@ -11,14 +11,15 @@ from source.rewards import rewards
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def load_model_checkpoint_and_tokenizer(checkpoint, model_name="SmolLM2-135M-Instruct"):
+def load_model_checkpoint_and_tokenizer(model_name="SmolLM2-135M-Instruct"):
     if not os.path.exists(os.environ.get("DATA_PATH") + f"models/{model_name}_SFT"):
         base_model = AutoModelForCausalLM.from_pretrained(
         os.environ.get("DATA_PATH") + f"models/{model_name}",
         torch_dtype="auto",
         device_map="auto"
-    )
-        model = PeftModel.from_pretrained(base_model, os.environ.get("DATA_PATH") + f"outputs/{model_name}_SFT/checkpoint-{checkpoint}")
+    	)
+	checkpoint = get_last_checkpoint(os.environ.get("DATA_PATH") + f"models/{model_name}")
+        model = PeftModel.from_pretrained(base_model, os.environ.get("DATA_PATH") + f"output/{model_name}/checkpoint-{checkpoint}")
         model = model.merge_and_unload()
         model.save_pretrained(os.environ.get("DATA_PATH") + f"models/{model_name}_SFT_{checkpoint}_steps")
         logger.info(f"Model saved to {os.environ.get('DATA_PATH')}models/{model_name}_SFT_{checkpoint}_steps")
@@ -73,18 +74,18 @@ def get_grpo_trainer(model, train_dataset, eval_dataset, config):
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,
         peft_config=peft_config,
-        reward_funcs=config["reward_funcs"],
+        reward_funcs=[rewards[fct_name] for fct_name in config["reward_fcts"]],
         callbacks=[EarlyStoppingCallback(early_stopping_patience=config["patience"])],
     )
 
     return trainer
 
 if __name__ == "__main__":
-    with open("configs/GRPO_config.yaml", "r") as f:
+    with open("configs/grpo_config.yaml", "r") as f:
         config = yaml.safe_load(f)
     
-    model, tokenizer = load_model_checkpoint_and_tokenizer(config["checkpoint"], config["model_name"])
-    train_dataset, eval_dataset = load_dataset(config)
+    model, tokenizer = load_model_checkpoint_and_tokenizer(config["model_name"])
+    train_dataset, eval_dataset = load_dataset("GRPO")
     trainer = get_grpo_trainer(model, train_dataset, eval_dataset, config)
 
     logger.info(f"Starting training...")

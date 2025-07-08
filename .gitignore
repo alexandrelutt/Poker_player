@@ -3,6 +3,7 @@
 .cache
 *.pyc
 *.cfg
+*.save
 share
 lib
 bin

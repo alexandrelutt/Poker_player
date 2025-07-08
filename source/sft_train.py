@@ -63,7 +63,7 @@ def get_sft_trainer(model, train_dataset, eval_dataset, config):
     return trainer
 
 if __name__ == "__main__":
-    with open("configs/SFT_config.yaml", "r") as f:
+    with open("configs/sft_config.yaml", "r") as f:
         config = yaml.safe_load(f)
     
     model, tokenizer = load_model_and_tokenizer(config["model_name"])
