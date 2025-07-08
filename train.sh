@@ -1,1 +1,1 @@
-{ nohup python -m source.sft_train > sft_training.log 2>&1; nohup python -m source.grpo_train > grpo_training.log 2>&1; } &
+{ nohup python -m source.sft_train > logs/sft_training.log 2>&1; nohup python -m source.grpo_train > logs/grpo_training.log 2>&1; } &

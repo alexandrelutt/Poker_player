@@ -7,10 +7,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def load_dataset(config):
-    train_data_path = os.environ.get("DATA_PATH") + "input/" + config["train_file"]
-
-    df = pd.read_json(train_data_path)
+def load_dataset(task="SFT"):
+    df = pd.read_csv(os.environ.get("DATA_PATH") + f"input/{task}_training_data.csv")
     train_df, val_df = train_test_split(df, test_size=0.2, random_state=42)
 
     train_data_dict = {"prompt": train_df["instruction"].tolist(), "completion": train_df["output"].tolist()}

@@ -2,8 +2,6 @@
 
 model_name: "Qwen2-0.5B-Instruct" ## "Qwen2-0.5B-Instruct", "SmolLM2-135M-Instruct"
 
-train_file: "preflop_60k_train_set_prompt_and_label.json"
-
 learning_rate: 0.0001
 patience: 5
 per_device_train_batch_size: 16
