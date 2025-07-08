@@ -1,13 +1,11 @@
 import os
-import pandas as pd
 import logging
 import yaml
 
 from transformers import AutoModelForCausalLM, AutoTokenizer, EarlyStoppingCallback
-from sklearn.model_selection import train_test_split
-from datasets import Dataset
 from trl import SFTConfig, SFTTrainer
 from peft import LoraConfig
+from source.data import load_dataset
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -25,22 +23,8 @@ def load_model_and_tokenizer(model_name="SmolLM2-135M-Instruct"):
     tokenizer.pad_token = tokenizer.bos_token   
     return model, tokenizer
 
-def load_dataset(config):
-    train_data_path = os.environ.get("DATA_PATH") + "input/" + config["train_file"]
-
-    df = pd.read_json(train_data_path)
-    train_df, val_df = train_test_split(df, test_size=0.2, random_state=42)
-
-    train_data_dict = {"prompt": train_df["instruction"].tolist(), "completion": train_df["output"].tolist()}
-    eval_data_dict = {"prompt": val_df["instruction"].tolist(), "completion": val_df["output"].tolist()}
-
-    train_dataset = Dataset.from_dict(train_data_dict)
-    eval_dataset = Dataset.from_dict(eval_data_dict)
-    logger.info(f"Succesfully loaded train/eval datasets!")
-    return train_dataset, eval_dataset
-
-def get_trainer(model, train_dataset, eval_dataset, config):
-    output_dir = os.environ.get("DATA_PATH") + f"output/{config['model_name']}/"
+def get_sft_trainer(model, train_dataset, eval_dataset, config):
+    output_dir = os.environ.get("DATA_PATH") + f"output/{config['model_name']}_SFT/"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -84,7 +68,7 @@ if __name__ == "__main__":
     
     model, tokenizer = load_model_and_tokenizer(config["model_name"])
     train_dataset, eval_dataset = load_dataset(config)
-    trainer = get_trainer(model, train_dataset, eval_dataset, config)
+    trainer = get_sft_trainer(model, train_dataset, eval_dataset, config)
 
     logger.info(f"Starting training...")
     trainer.train()

@@ -1,7 +1,7 @@
 ## Parameters for GRPO
 
 model_name: "Qwen2-0.5B-Instruct" ## "Qwen2-0.5B-Instruct", "SmolLM2-135M-Instruct"
-sft_checkpoint: 20_000
+sft_checkpoint: 4_200
 
 train_file: "preflop_500k_train_set_prompt_and_label.json"
 reward_fct: ["risk_averse"] # "risk_averse", "risk_seeking"
