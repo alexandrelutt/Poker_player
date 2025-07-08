@@ -18,7 +18,7 @@ def load_model_checkpoint_and_tokenizer(model_name="SmolLM2-135M-Instruct"):
         torch_dtype="auto",
         device_map="auto"
     	)
-	checkpoint = get_last_checkpoint(os.environ.get("DATA_PATH") + f"models/{model_name}")
+        checkpoint = get_last_checkpoint(os.environ.get("DATA_PATH") + f"models/{model_name}")
         model = PeftModel.from_pretrained(base_model, os.environ.get("DATA_PATH") + f"output/{model_name}/checkpoint-{checkpoint}")
         model = model.merge_and_unload()
         model.save_pretrained(os.environ.get("DATA_PATH") + f"models/{model_name}_SFT_{checkpoint}_steps")

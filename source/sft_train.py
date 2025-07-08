@@ -67,7 +67,7 @@ if __name__ == "__main__":
         config = yaml.safe_load(f)
     
     model, tokenizer = load_model_and_tokenizer(config["model_name"])
-    train_dataset, eval_dataset = load_dataset(config)
+    train_dataset, eval_dataset = load_dataset(task="SFT")
     trainer = get_sft_trainer(model, train_dataset, eval_dataset, config)
 
     logger.info(f"Starting training...")
