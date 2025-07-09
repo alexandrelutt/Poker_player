@@ -68,7 +68,7 @@ def load_dataset(task):
     df = pd.read_csv(os.environ.get("DATA_PATH") + f"input/{task}_training_data.csv")
     train_df, val_df = train_test_split(df, test_size=0.2, random_state=42) 
     train_df = train_df.sample(n=min(len(train_df), 100_000), random_state=42)
-    val_df = val_df.sample(n=min(len(val_df), 20_000), random_state=42)
+    val_df = val_df.sample(n=min(len(val_df), 4_000), random_state=42)
 
     train_data_dict = {"prompt": train_df["instruction"].tolist(), "completion": train_df["output"].tolist(), "ground_truth": train_df["output"].tolist()}
     eval_data_dict = {"prompt": val_df["instruction"].tolist(), "completion": val_df["output"].tolist(), "ground_truth": val_df["output"].tolist()}
