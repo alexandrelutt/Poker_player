@@ -2,26 +2,13 @@ import os
 import logging
 import yaml
 
-from transformers import AutoModelForCausalLM, AutoTokenizer, EarlyStoppingCallback
+from transformers import EarlyStoppingCallback
 from trl import SFTConfig, SFTTrainer
 from peft import LoraConfig
-from source.data import load_dataset
+from source.data import load_dataset, load_model_and_tokenizer
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-def load_model_and_tokenizer(model_name="SmolLM2-135M-Instruct"):
-    model = AutoModelForCausalLM.from_pretrained(
-        os.environ.get("DATA_PATH") + f"models/{model_name}",
-        torch_dtype="auto",
-        device_map="auto"
-    )
-    tokenizer = AutoTokenizer.from_pretrained(os.environ.get("DATA_PATH") + f"models/{model_name}")
-    logger.info(f"Succesfully loaded {model_name}!")
-
-    tokenizer.padding_side = "left"
-    tokenizer.pad_token = tokenizer.bos_token   
-    return model, tokenizer
 
 def get_sft_trainer(model, train_dataset, eval_dataset, config):
     output_dir = os.environ.get("DATA_PATH") + f"output/{config['model_name']}_SFT/"
@@ -67,7 +54,7 @@ if __name__ == "__main__":
         config = yaml.safe_load(f)
     
     model, tokenizer = load_model_and_tokenizer(config["model_name"])
-    train_dataset, eval_dataset = load_dataset(task="SFT", tokenizer=tokenizer, config=config)
+    train_dataset, eval_dataset = load_dataset(task="SFT")
     trainer = get_sft_trainer(model, train_dataset, eval_dataset, config)
 
     logger.info(f"Starting training...")

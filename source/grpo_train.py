@@ -2,42 +2,14 @@ import os
 import logging
 import yaml
 
-from transformers import AutoModelForCausalLM, AutoTokenizer, EarlyStoppingCallback, get_last_checkpoint
+from transformers import EarlyStoppingCallback
 from trl import GRPOConfig, GRPOTrainer
-from peft import PeftModel, LoraConfig
-from source.data import load_dataset
+from peft import LoraConfig
+from source.data import load_dataset, load_model_checkpoint_and_tokenizer
 from source.rewards import rewards
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-def load_model_checkpoint_and_tokenizer(model_name="SmolLM2-135M-Instruct"):
-    if not os.path.exists(os.environ.get("DATA_PATH") + f"models/{model_name}_SFT"):
-        base_model = AutoModelForCausalLM.from_pretrained(
-        os.environ.get("DATA_PATH") + f"models/{model_name}",
-        torch_dtype="auto",
-        device_map="auto"
-    	)
-        checkpoint = get_last_checkpoint(os.environ.get("DATA_PATH") + f"models/{model_name}")
-        model = PeftModel.from_pretrained(base_model, os.environ.get("DATA_PATH") + f"output/{model_name}/checkpoint-{checkpoint}")
-        model = model.merge_and_unload()
-        model.save_pretrained(os.environ.get("DATA_PATH") + f"models/{model_name}_SFT_{checkpoint}_steps")
-        logger.info(f"Model saved to {os.environ.get('DATA_PATH')}models/{model_name}_SFT_{checkpoint}_steps")
-
-    else:
-        logger.info(f"Model already exists at {os.environ.get('DATA_PATH')}models/{model_name}_SFT_{checkpoint}_steps")
-        model = AutoModelForCausalLM.from_pretrained(
-            os.environ.get("DATA_PATH") + f"models/{model_name}_SFT",
-            torch_dtype="auto",
-            device_map="auto"
-        )
-
-    tokenizer = AutoTokenizer.from_pretrained(os.environ.get("DATA_PATH") + f"models/{model_name}")
-    logger.info(f"Succesfully loaded {model_name} checkpoint {checkpoint}!")
-
-    tokenizer.padding_side = "left"
-    tokenizer.pad_token = tokenizer.bos_token   
-    return model, tokenizer
 
 def get_grpo_trainer(model, train_dataset, eval_dataset, config):
     output_dir = os.environ.get("DATA_PATH") + f"output/{config['model_name']}_GRPO/"
