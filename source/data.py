@@ -22,4 +22,4 @@ def load_dataset(task, tokenizer, config):
     eval_dataset = Dataset.from_dict(eval_data_dict)
     tokenized_eval_dataset = eval_dataset.map(tokenize_batch, batched=True)
     logger.info(f"Succesfully loaded train/eval datasets!")
-    return train_dataset, eval_dataset
+    return tokenized_train_dataset, tokenized_eval_dataset
