@@ -5,7 +5,7 @@ import yaml
 from transformers import EarlyStoppingCallback
 from trl import GRPOConfig, GRPOTrainer
 from peft import LoraConfig
-from source.data import load_dataset, load_model_checkpoint_and_tokenizer
+from source.utils import load_dataset, load_model_checkpoint_and_tokenizer
 from source.rewards import rewards
 
 logging.basicConfig(level=logging.INFO)
