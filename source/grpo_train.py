@@ -56,7 +56,7 @@ if __name__ == "__main__":
     with open("configs/grpo_config.yaml", "r") as f:
         config = yaml.safe_load(f)
     
-    model, tokenizer = load_model_checkpoint_and_tokenizer(config["model_name"])
+    model, tokenizer = load_model_checkpoint_and_tokenizer(config["model_name"], config["checkpoint"])
     train_dataset, eval_dataset = load_dataset("GRPO")
     trainer = get_grpo_trainer(model, train_dataset, eval_dataset, config)
 

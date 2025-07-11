@@ -36,19 +36,29 @@ def load_model_and_tokenizer(model_name="SmolLM2-135M-Instruct"):
     tokenizer.pad_token = tokenizer.bos_token   
     return model, tokenizer
 
-def load_model_checkpoint_and_tokenizer(model_name="SmolLM2-135M-Instruct"):
-    base_model = AutoModelForCausalLM.from_pretrained(
-        os.environ.get("DATA_PATH") + f"models/{model_name}",
-        torch_dtype="auto",
-        device_map="auto"
-    )
-    checkpoint = get_last_checkpoint(os.environ.get("DATA_PATH") + f"output/{model_name}_SFT")
-    model = PeftModel.from_pretrained(base_model, os.environ.get("DATA_PATH") + f"output/{model_name}_SFT/checkpoint-{checkpoint}")
-    model = model.merge_and_unload()
-    model.save_pretrained(os.environ.get("DATA_PATH") + f"models/{model_name}_SFT_{checkpoint}_steps")
-    logger.info(f"Model saved to {os.environ.get('DATA_PATH')}models/{model_name}_SFT_{checkpoint}_steps")
-    tokenizer = AutoTokenizer.from_pretrained(os.environ.get("DATA_PATH") + f"models/{model_name}")
-    logger.info(f"Succesfully loaded {model_name} checkpoint {checkpoint}!")
+def load_model_checkpoint_and_tokenizer(model_name="SmolLM2-135M-Instruct", checkpoint=None):
+    if os.path.exists(os.environ.get("DATA_PATH") + f"models/{model_name}_SFT_{checkpoint}_steps"):
+        model = AutoModelForCausalLM.from_pretrained(
+            os.environ.get("DATA_PATH") + f"models/{model_name}_SFT_{checkpoint}_steps",
+            torch_dtype="auto",
+            device_map="auto"
+        )
+        tokenizer = AutoTokenizer.from_pretrained(os.environ.get("DATA_PATH") + f"models/{model_name}")
+        logger.info(f"Succesfully loaded {model_name} checkpoint {checkpoint}!")
+        
+    else:
+        base_model = AutoModelForCausalLM.from_pretrained(
+            os.environ.get("DATA_PATH") + f"models/{model_name}",
+            torch_dtype="auto",
+            device_map="auto"
+        )
+        checkpoint = get_last_checkpoint(os.environ.get("DATA_PATH") + f"output/{model_name}_SFT")
+        model = PeftModel.from_pretrained(base_model, os.environ.get("DATA_PATH") + f"output/{model_name}_SFT/checkpoint-{checkpoint}")
+        model = model.merge_and_unload()
+        model.save_pretrained(os.environ.get("DATA_PATH") + f"models/{model_name}_SFT_{checkpoint}_steps")
+        logger.info(f"Model saved to {os.environ.get('DATA_PATH')}models/{model_name}_SFT_{checkpoint}_steps")
+        tokenizer = AutoTokenizer.from_pretrained(os.environ.get("DATA_PATH") + f"models/{model_name}")
+        logger.info(f"Succesfully loaded {model_name} checkpoint {checkpoint}!")
 
     tokenizer.padding_side = "left"
     tokenizer.pad_token = tokenizer.bos_token   
