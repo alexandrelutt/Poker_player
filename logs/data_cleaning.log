@@ -1,0 +1,2 @@
+INFO:__main__:Total samples in the training set: 563200
+INFO:__main__:Training data cleaned and split into SFT and GRPO datasets (281600 SFT samples, 281600 GRPO samples).
