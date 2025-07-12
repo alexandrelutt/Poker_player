@@ -19,7 +19,7 @@ def get_last_checkpoint(folder):
     ]
     if len(checkpoints) == 0:
         return
-    return os.path.join(folder, max(checkpoints, key=lambda x: int(_re_checkpoint.search(x).groups()[0])))
+    return os.path.join(folder, max(checkpoints, key=lambda x: int(_re_checkpoint.search(x).groups()[0]))), max(checkpoints, key=lambda x: int(_re_checkpoint.search(x).groups()[0]))
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +33,7 @@ def load_model_and_tokenizer(model_name="SmolLM2-135M-Instruct"):
     logger.info(f"Succesfully loaded {model_name}!")
 
     tokenizer.padding_side = "left"
-    tokenizer.pad_token = tokenizer.bos_token   
+    tokenizer.pad_token = tokenizer.bos_token
     return model, tokenizer
 
 def load_model_checkpoint_and_tokenizer(model_name="SmolLM2-135M-Instruct", checkpoint=None):
@@ -52,13 +52,13 @@ def load_model_checkpoint_and_tokenizer(model_name="SmolLM2-135M-Instruct", chec
             torch_dtype="auto",
             device_map="auto"
         )
-        checkpoint = get_last_checkpoint(os.environ.get("DATA_PATH") + f"output/{model_name}_SFT")
-        model = PeftModel.from_pretrained(base_model, os.environ.get("DATA_PATH") + f"output/{model_name}_SFT/checkpoint-{checkpoint}")
+        checkpoint, n_steps = get_last_checkpoint(os.environ.get("DATA_PATH") + f"output/{model_name}_SFT")
+        model = PeftModel.from_pretrained(base_model, checkpoint)
         model = model.merge_and_unload()
-        model.save_pretrained(os.environ.get("DATA_PATH") + f"models/{model_name}_SFT_{checkpoint}_steps")
-        logger.info(f"Model saved to {os.environ.get('DATA_PATH')}models/{model_name}_SFT_{checkpoint}_steps")
+        model.save_pretrained(os.environ.get("DATA_PATH") + f"models/{model_name}_SFT_{n_steps}_steps")
+        logger.info(f"Model saved to {os.environ.get('DATA_PATH')}models/{model_name}_SFT_{n_steps}_steps")
         tokenizer = AutoTokenizer.from_pretrained(os.environ.get("DATA_PATH") + f"models/{model_name}")
-        logger.info(f"Succesfully loaded {model_name} checkpoint {checkpoint}!")
+        logger.info(f"Succesfully loaded {model_name} checkpoint {n_steps}!")
 
     tokenizer.padding_side = "left"
     tokenizer.pad_token = tokenizer.bos_token   
