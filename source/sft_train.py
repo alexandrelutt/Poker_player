@@ -5,7 +5,7 @@ import yaml
 from transformers import EarlyStoppingCallback
 from trl import SFTConfig, SFTTrainer
 from peft import LoraConfig
-from source.data import load_dataset, load_model_and_tokenizer
+from source.utils import load_dataset, load_model_and_tokenizer
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
