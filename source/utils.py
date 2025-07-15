@@ -19,7 +19,7 @@ def get_last_checkpoint(folder):
     ]
     if len(checkpoints) == 0:
         return
-    return os.path.join(folder, max(checkpoints, key=lambda x: int(_re_checkpoint.search(x).groups()[0]))), max(checkpoints, key=lambda x: int(_re_checkpoint.search(x).groups()[0]))
+    return os.path.join(folder, max(checkpoints, key=lambda x: int(_re_checkpoint.search(x).groups()[0]))), max(checkpoints, key=lambda x: int(_re_checkpoint.search(x).groups()[0])).split("-")[-1]
 
 logger = logging.getLogger(__name__)
 

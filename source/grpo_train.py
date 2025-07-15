@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def get_grpo_trainer(model, train_dataset, eval_dataset, config):
-    output_dir = os.environ.get("DATA_PATH") + f"output/{config['model_name']}_GRPO/"
+    output_dir = os.environ.get("DATA_PATH") + f"output/{config['model_name']}_GRPO_{rewards[config['reward_fcts'][0]]}/"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -28,6 +28,8 @@ def get_grpo_trainer(model, train_dataset, eval_dataset, config):
                                save_total_limit=config["save_total_limit"],
                                logging_steps=config["logging_steps"],
                                load_best_model_at_end=True,
+                               bf16=False,
+                               fp16=True,
                                metric_for_best_model="eval_loss", 
                                report_to="tensorboard"
                             )

@@ -31,6 +31,12 @@ To get started with the Poker Player, follow these steps:
    . setup.sh
    ```
 
+4. **If you want to make contributions, log in on GitHub (optional)** 
+   ```bash
+   sudo apt  install gh
+   gh auth login
+   ```
+
 ## Usage
 
 For easier manipulation, it is suggested to run the following commands inside a tmux session, which can be done with
