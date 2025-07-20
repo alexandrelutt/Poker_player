@@ -14,5 +14,6 @@ mkdir -p data/models/SmolLM2-135M-Instruct
 huggingface-cli download HuggingFaceTB/SmolLM2-135M-Instruct --local-dir data/models/SmolLM2-135M-Instruct
 rm -rf data/models/SmolLM2-135M-Instruct/.cache
 
+mkdir -p data/output
 mkdir -p logs/
 python3 -m source.clean_data > logs/data_cleaning.log 2>&1 &

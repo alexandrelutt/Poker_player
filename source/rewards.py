@@ -9,6 +9,7 @@ def is_valid_action(action):
 
 def risk_averse_reward(completions, ground_truth, **kwargs):
     """
+    FOR TESTING GRPO TRAINING PIPELINE: successfully parses and rewards poker actions.
     Rewards safe, conservative actions: folding and checking.
     Penalizes aggressive actions: raising, calling.
     Returns 0 reward for invalid formats.

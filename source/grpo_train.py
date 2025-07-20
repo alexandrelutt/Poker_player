@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def get_grpo_trainer(model, train_dataset, eval_dataset, config):
-    output_dir = os.environ.get("DATA_PATH") + f"output/{config['model_name']}_GRPO_{rewards[config['reward_fcts'][0]]}/"
+    output_dir = os.environ.get("DATA_PATH") + f"output/{config['model_name']}_GRPO_{config['reward_fcts'][0]}/"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
