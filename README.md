@@ -42,7 +42,8 @@ To get started with the Poker Player, follow these steps:
 For easier manipulation, it is suggested to run the following commands inside a tmux session, which can be done with
 
    ```bash
-   tmux attach
+   tmux
+   source venv/bin/activate
    export DATA_PATH="/home/alexlutt/Poker_player/data/"
    ```   
 
