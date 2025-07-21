@@ -43,6 +43,7 @@ For easier manipulation, it is suggested to run the following commands inside a 
 
    ```bash
    tmux attach
+   export DATA_PATH="/home/alexlutt/Poker_player/data/"
    ```   
 
 1. **Run training pipeline** with arguments detailed in `configs/SFT_config.yaml` and `configs/GRPO_config.yaml`
